@@ -9,6 +9,7 @@ function showBackHome() {
 // زر الرجوع
 document.addEventListener("click", function (e) {
   if (e.target && e.target.id === "backHomeBtn") {
-    window.location.href = "index.html"; // الصفحة الرئيسية
+    window.location.href = "Index.html"; // الصفحة الرئيسية
   }
+
 });

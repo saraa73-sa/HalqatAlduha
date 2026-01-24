@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بطاقة الدور</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="Mobil.css">
+  <link rel="stylesheet" href="back-home.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===============================
+   قاعدة للجميع
+=============================== */
+    * {
+      box-sizing: border-box;
+      font-family: 'Cairo', Tahoma, Arial;
+    }
+
+    /* ===============================
+   الجسم والبطاقة
+=============================== */
+    body {
+      background: #f5f3ee;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .card {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #065f46, #047857);
+      color: white;
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .header p {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* ===============================
+   الحقول العامة
+=============================== */
+    form {
+      padding: 30px;
+    }
+
+    .field {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #064e3b;
+    }
+
+    label span {
+      color: #b91c1c;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      height: 52px;
+      /* توحيد ارتفاع الحقول */
+      padding: 10px 14px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+    }
+
+    /* ===============================
+   زر الإرسال
+=============================== */
+    button {
+      width: 100%;
+      height: 52px;
+      /* نفس ارتفاع الحقول */
+      background: #065f46;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #047857;
+    }
+
+    /* ===============================
+   إشعارات النجاح / الخطأ
+=============================== */
+    .notification {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .notification.success {
+      background: #dcfce7;
+      color: #065f46;
+    }
+
+    .notification.error {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    /* ===============================
+   الفوتر
+=============================== */
+    .footer {
+      text-align: center;
+      padding: 18px;
+      font-size: 14px;
+      color: #065f46;
+      background: #f0fdf4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <div class="header">
+      <h1>بطاقة الدور</h1>
+      <p>تسجيل اسم الطالبة ورقم الدور</p>
+    </div>
+
+    <form id="dorForm">
+      <div class="field">
+        <label>اسم الطالبة الثلاثي <span>*</span></label>
+        <input type="text" id="dorName" required placeholder="أدخلي اسمك الثلاثي">
+      </div>
+      <div class="field">
+        <label>رقم الدور <span>*</span></label>
+        <select id="dorNumber" required>
+          <option value="">⏳ جاري تحميل الأرقام المتاحة...</option>
+        </select>
+      </div>
+      <button type="submit" id="submitBtn">إرسال البطاقة</button>
+      <div id="buttonContainer"></div>
+        <div id="backHomeContainer"></div>
+  <script src="back-home.js"></script>
+  <script>
+    fetch("back-home.html")
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById("backHomeContainer").innerHTML = html;
+      });
+  </script>
+    </form>
+
+    <div class="footer">نسأل الله التوفيق والسداد 🌿</div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    console.log(WEB_APP_URL);
+    //const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzfgievN2g-Y5I4kHpv8YHEeo7_dzQcedxE7yqbFRJM-8Ia5CtssBLdAY0FUota951h/exec";
+    // 1) تحميل أرقام الدور المتاحة
+    function loadAvailableNumbers() {
+      const select = document.getElementById("dorNumber");
+
+      fetch(WEB_APP_URL + "?action=getNumbers")
+        .then(r => r.json())
+        .then(numbers => {
+          select.innerHTML = '<option value="">اختر الرقم</option>';
+          if (!numbers || numbers.length === 0) {
+            select.innerHTML = '<option value="">⚠️ لا توجد أرقام متاحة</option>';
+          } else {
+            numbers.forEach(num => {
+              const opt = document.createElement("option");
+              opt.value = num;
+              opt.textContent = num;
+              select.appendChild(opt);
+            });
+          }
+        })
+        .catch(() => {
+          select.innerHTML = '<option value="">⚠️ فشل تحميل الأرقام</option>';
+        });
+    }
+
+    window.onload = loadAvailableNumbers;
+
+    // 2) إرسال النموذج
+    document.getElementById("dorForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const btn = document.getElementById("submitBtn");
+      const name = document.getElementById("dorName").value.trim();
+      const number = document.getElementById("dorNumber").value;
+
+      if (!name || !number) return;
+
+      btn.disabled = true;
+      btn.textContent = "⏳ جاري الحجز والتحقق...";
+      btn.style.backgroundColor = "#9ca3af";
+
+      const formData = new URLSearchParams();
+      formData.append('action', 'roll');
+      formData.append('name', name);
+      formData.append('rollNumber', number);
+
+      fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: formData
+      })
+        .then(r => r.text())
+        .then(msg => {
+          if (msg.startsWith("❌")) throw new Error(msg);
+
+          btn.textContent = "✔️ تم الحجز بنجاح";
+          btn.style.backgroundColor = "#059669";
+
+          // إعادة تعيين الحقول
+          document.getElementById("dorName").value = "";
+          loadAvailableNumbers();
+
+          showBackHome();
+
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = "إرسال البطاقة";
+            btn.style.backgroundColor = "#065f46";
+          }, 5000);
+
+        })
+        .catch(err => {
+          btn.textContent = "❌ " + err.message;
+          btn.style.backgroundColor = "#dc2626";
+
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = "إرسال البطاقة";
+            btn.style.backgroundColor = "#065f46";
+            loadAvailableNumbers();
+          }, 10000);
+        });
+    });
+    fetch('successbutton.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('buttonContainer').innerHTML = html;
+        // تفعيل السكريبت الموجود داخل الملف المجلوب
+        const oldScript = document.getElementById('buttonContainer').querySelector('script');
+        const newScript = document.createElement('script');
+        newScript.text = oldScript.text;
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+      });
+  </script>
+
+</body>
+
+</html>

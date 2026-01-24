@@ -1,0 +1,40 @@
+.back-home-wrapper {
+  margin-top: 18px;
+  display: none; /* مخفي افتراضيًا */
+}
+
+.back-home-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #0f766e, #115e59);
+  color: #fff;
+  font-family: 'Cairo';
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-home-btn:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #115e59, #064e3b);
+}
+
+/* تأثير ظهور ناعم */
+.back-home-wrapper.show {
+  display: block;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

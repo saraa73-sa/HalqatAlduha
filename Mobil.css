@@ -1,0 +1,55 @@
+/* ===============================
+   Mobile Enhancements
+================================ */
+@media (max-width: 640px) {
+
+  body {
+    padding: 16px;
+  }
+
+  .card {
+    border-radius: 14px;
+  }
+
+  .header {
+    padding: 24px 16px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .header p {
+    font-size: 13px;
+  }
+
+  form {
+    padding: 20px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  input,
+  select,
+  .selected {
+    font-size: 15px;
+    padding: 14px;
+  }
+
+  button {
+    padding: 16px;
+    font-size: 17px;
+    border-radius: 14px;
+  }
+
+  .result-box {
+    font-size: 15px;
+  }
+
+  .toast {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+}

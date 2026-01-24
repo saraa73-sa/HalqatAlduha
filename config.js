@@ -1,0 +1,1 @@
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby-KVV8gkgdcE4oaNi29cYHYxEXezIvgf2xcARRXK9IWzxMEDhTIko76XYkhFxJYGoh/exec";

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>بطاقة التسميع</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="Mobil.css">
+    <link rel="stylesheet" href="back-home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===============================
+   Base & Body
+================================ */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f3ee;
+            font-family: 'Cairo', Tahoma, Arial;
+            margin: 0;
+            padding: 40px;
+        }
+
+        /* ===============================
+   Card Layout
+================================ */
+        .card {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #065f46, #047857);
+            color: #ffffff;
+            text-align: center;
+            padding: 32px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ===============================
+   Form
+================================ */
+        form {
+            padding: 30px;
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #064e3b;
+        }
+
+        label span {
+            color: #b91c1c;
+        }
+
+        small {
+            display: block;
+            color: #555;
+            font-size: 13px;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* ===============================
+   Inputs
+================================ */
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            font-family: 'Cairo';
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #047857;
+        }
+
+        /* ===============================
+   Button
+================================ */
+        button {
+            width: 100%;
+            background: #065f46;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Cairo';
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: #047857;
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* ===============================
+   Footer
+================================ */
+        .footer {
+            text-align: center;
+            padding: 18px;
+            font-size: 14px;
+            color: #065f46;
+            background: #f0fdf4;
+        }
+
+        /* ===============================
+   Custom Select
+================================ */
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .custom-select {
+            position: relative;
+            flex: 1;
+        }
+
+        .selected {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 105%;
+            right: 0;
+            left: 0;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            max-height: 260px;
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        .dropdown input {
+            border: none;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .dropdown li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dropdown li:hover {
+            background: #f0fdf4;
+        }
+
+        /* ===============================
+   Result Box
+================================ */
+        .result-box {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0fdf4;
+            border: 1px solid #065f46;
+            border-radius: 8px;
+            color: #065f46;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* ===============================
+   Toast Notifications
+================================ */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 50%;
+            transform: translateX(50%);
+            min-width: 260px;
+            max-width: 90%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            color: #ffffff;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            bottom: 40px;
+        }
+
+        .toast.success {
+            background: #059669;
+        }
+
+        .toast.error {
+            background: #dc2626;
+        }
+
+        .toast.warning {
+            background: #f59e0b;
+        }
+
+        .toast.info {
+            background: #065f46;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>بطاقة التسميع</h1>
+            <p>تسجيل حصاد الطالبة</p>
+        </div>
+
+        <form id="tasmeeForm">
+            <!-- اسم الطالبة -->
+            <div class="field">
+                <label>اسم الطالبة الثلاثي <span>*</span></label>
+                <input type="text" id="tasmeeName" required>
+            </div>
+
+            <!-- الدرس -->
+            <div class="field">
+                <label>الدرس</label>
+                <small>إذا لم يوجد لديك درس اترك الخانة فارغة</small>
+                <input type="text" id="tasmeeLesson">
+            </div>
+
+            <!-- المراجعة -->
+            <div class="field">
+                <label>المراجعة</label>
+                <small>إذا لم توجد لديك مراجعة اترك الخانة فارغة</small>
+                <input type="text" id="tasmeeReview">
+            </div>
+
+            <!-- حساب عدد الأوجه -->
+            <div class="field">
+                <label>حساب عدد الأوجه</label>
+                <small>اختر السور أدناه ليتم الحساب تلقائيًا</small>
+
+                <div class="row">
+                    <!-- سورة البداية -->
+                    <div id="startBox" class="custom-select">
+                        <div class="selected" onclick="toggleList('start')">اختر سورة البداية</div>
+                        <div class="dropdown">
+                            <input type="text" placeholder="بحث..." oninput="filterSurahs(this,'start')" />
+                            <ul></ul>
+                        </div>
+                        <input type="hidden" id="startSurah">
+                    </div>
+
+                    <!-- سورة النهاية -->
+                    <div id="endBox" class="custom-select">
+                        <div class="selected" onclick="toggleList('end')">اختر سورة النهاية</div>
+                        <div class="dropdown">
+                            <input type="text" placeholder="بحث..." oninput="filterSurahs(this,'end')" />
+                            <ul></ul>
+                        </div>
+                        <input type="hidden" id="endSurah">
+                    </div>
+                </div>
+
+                <!-- التنبيه والنتائج -->
+                <div class="warning" id="surahWarning">⚠️ سورة البداية يجب أن تكون قبل سورة النهاية </div>
+                <div id="facesBox" class="result-box">
+                    <input type="hidden" id="tasmeeFaces" name="faces">
+                    <span id="facesResult">0</span> وجه
+                </div>
+            </div>
+
+            <!-- التنبيهات المنبثقة -->
+            <div id="toast" class="toast"></div>
+
+            <button type="submit">إرسال البطاقة</button>
+
+            <div id="backHomeContainer"></div>
+            <script src="back-home.js"></script>
+            <script>
+                fetch("back-home.html")
+                    .then(r => r.text())
+                    .then(html => {
+                        document.getElementById("backHomeContainer").innerHTML = html;
+                    });
+            </script>
+        </form>
+
+        <div class="footer">نسأل الله التوفيق والسداد 🌿</div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        console.log(WEB_APP_URL);
+        //const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzfgievN2g-Y5I4kHpv8YHEeo7_dzQcedxE7yqbFRJM-8Ia5CtssBLdAY0FUota951h/exec";
+        /* ===============================
+           تحميل السور
+        ================================ */
+        window.addEventListener("load", () => {
+            fetch(`${WEB_APP_URL}?action=surahs`)
+                .then(r => r.json())
+                .then(populateDropdowns)
+                .catch(() => showToast("❌ فشل تحميل السور", "error"));
+        });
+
+        let surahList = [];
+
+        /* ===============================
+           تعبئة القوائم
+        ================================ */
+        function populateDropdowns(surahs = []) {
+            surahList = surahs;
+            fillCustomList("start");
+            fillCustomList("end");
+
+            if (surahs.length) {
+                setSurah("start", surahs[0].name);
+                setSurah("end", surahs[surahs.length - 1].name);
+            }
+        }
+
+        /* ===============================
+           إنشاء القوائم
+        ================================ */
+        function fillCustomList(type) {
+            const ul = document.querySelector(`#${type}Box ul`);
+            ul.innerHTML = "";
+            surahList.forEach(s => {
+                const li = document.createElement("li");
+                li.textContent = s.name;
+                li.onclick = () => setSurah(type, s.name);
+                ul.appendChild(li);
+            });
+        }
+
+        function setSurah(type, name) {
+            document.getElementById(type + "Surah").value = name;
+            document.querySelector(`#${type}Box .selected`).textContent = name;
+            document.querySelector(`#${type}Box .dropdown`).style.display = "none";
+            calculateFaces();
+        }
+
+        /* ===============================
+           حساب الأوجه
+        ================================ */
+        function calculateFaces() {
+            const start = document.getElementById("startSurah").value;
+            const end = document.getElementById("endSurah").value;
+            const btn = document.querySelector('button[type="submit"]'); // جلب الزر
+
+            if (!start || !end) return;
+
+            // 1. تعطيل الزر ومنع الإرسال مؤقتاً
+            btn.disabled = true;
+            btn.textContent = "⏳ جاري حساب الأوجه...";
+
+            fetch(`${WEB_APP_URL}?action=faces&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`)
+                .then(r => r.text()) // نستخدم text أولاً للتأكد من الرد
+                .then(data => {
+                    const res = JSON.parse(data);
+                    if (res.error) {
+                        showToast("⚠️ " + res.message, "error");
+                        facesResult.textContent = "0";
+                        tasmeeFaces.value = "0";
+                    } else {
+                        facesResult.textContent = res.faces || 0;
+                        tasmeeFaces.value = res.faces || 0;
+
+                        // 2. إعادة تفعيل الزر بعد نجاح الحساب
+                        btn.disabled = false;
+                        btn.textContent = "إرسال البطاقة";
+                    }
+                })
+                .catch(() => {
+                    showToast("❌ فشل حساب عدد الأوجه", "error");
+                    btn.disabled = false;
+                    btn.textContent = "إرسال البطاقة";
+                });
+        }
+
+
+        /* ===============================
+           فتح / إغلاق القائمة
+        ================================ */
+        function toggleList(type) {
+            const box = document.getElementById(type + "Box");
+            const dropdown = box.querySelector(".dropdown");
+
+            // إغلاق القوائم الأخرى
+            document.querySelectorAll(".dropdown").forEach(d => {
+                if (d !== dropdown) d.style.display = "none";
+            });
+
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        /* إغلاق القوائم عند الضغط خارجها */
+        document.addEventListener("click", e => {
+            if (!e.target.closest(".custom-select")) {
+                document.querySelectorAll(".dropdown").forEach(d => {
+                    d.style.display = "none";
+                });
+            }
+        });
+
+        /* ===============================
+      دالة البحث لتصفية السور داخل القائمة
+        ================================ */
+        /* ===============================
+           دالة البحث الذكي (تجاهل الهمزات)
+        ================================ */
+        function filterSurahs(input, type) {
+            // دالة لتنظيف النص من الهمزات والتشكيل
+            const normalize = (text) => {
+                return text
+                    .replace(/[أإآأ]/g, "ا")
+                    .replace(/ة/g, "ه")
+                    .replace(/ى/g, "ي")
+                    .replace(/[\u064B-\u065F]/g, ""); // حذف التشكيل إن وجد
+            };
+
+            const filter = normalize(input.value.trim());
+            const ul = document.querySelector(`#${type}Box ul`);
+            const li = ul.getElementsByTagName("li");
+
+            for (let i = 0; i < li.length; i++) {
+                const text = normalize(li[i].textContent || li[i].innerText);
+                // البحث في النص المنظف
+                if (text.includes(filter)) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+
+
+
+        /* ===============================
+           إرسال النموذج
+        ================================ */
+        /* ===============================
+           إرسال النموذج (البيانات المحددة فقط)
+        ================================ */
+        tasmeeForm.addEventListener("submit", e => {
+            e.preventDefault();
+
+            // شرط إضافي: إذا كان الحساب لم يكتمل أو القيمة صفر
+            if (!tasmeeFaces.value || parseFloat(tasmeeFaces.value) <= 0) {
+                showToast("⚠️ يرجى الانتظار حتى يتم حساب الأوجه بشكل صحيح", "warning");
+                return;
+            }
+
+            const btn = e.target.querySelector('button[type="submit"]');
+
+            // التأكد من وجود عدد أوجه صحيح
+            if (!tasmeeFaces.value || +tasmeeFaces.value <= 0) {
+                showToast("❌ يرجى اختيار السور لحساب الأوجه", "error");
+                return;
+            }
+
+            // تغيير حالة الزر أثناء الإرسال
+            btn.disabled = true;
+            btn.textContent = "⏳ جاري الإرسال...";
+
+            // إرسال الحقول المطلوبة فقط
+            const data = new URLSearchParams({
+                action: "tasmee",
+                name: document.getElementById("tasmeeName").value.trim(),
+                lesson: document.getElementById("tasmeeLesson").value.trim(),
+                review: document.getElementById("tasmeeReview").value.trim(),
+                faces: document.getElementById("tasmeeFaces").value
+            });
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: data
+            })
+                .then(r => r.text())
+                .then(msg => {
+                    if (msg.startsWith("❌")) throw new Error(msg);
+                    btn.textContent = "✔️ تم إرسال البطاقة بنجاح";
+                    btn.style.backgroundColor = "#059669";
+                    showBackHome();
+                    e.target.reset(); // إعادة تعيين النموذج
+
+                    document.getElementById("facesResult").textContent = "0"; // تصفير العداد
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.textContent = "إرسال البطاقة";
+                        btn.style.backgroundColor = "#065f46";
+                    }, 5000);
+                })
+                .catch((err) => {
+                    showToast("❌ فشل الإرسال: " + err.message, "error");
+                })
+
+        });
+
+
+        /* ===============================
+           Toast
+        ================================ */
+        function showToast(msg, type) {
+            toast.textContent = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+    </script>
+
+</body>
+
+</html>

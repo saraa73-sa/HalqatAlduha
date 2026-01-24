@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com" rel="stylesheet">
+<style>
+  :root { --primary: #065f46; --bg: #f8fafc; }
+  body { background: var(--bg); font-family: 'Cairo', sans-serif; padding: 15px; color: #1e293b; }
+  .card { max-width: 500px; margin: auto; background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; }
+  .header { background: var(--primary); color: white; text-align: center; padding: 25px; }
+  .section { padding: 20px; border-bottom: 1px solid #f1f5f9; }
+  label { font-size: 14px; font-weight: 700; color: var(--primary); display: block; margin-bottom: 10px; }
+  input[type="time"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-family: inherit; box-sizing: border-box; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .check-group { background: #f9f9f9; padding: 12px; border-radius: 10px; margin-top: 10px; }
+  .check-item { display: flex; align-items: center; gap: 10px; padding: 5px 0; cursor: pointer; }
+  .btn { width: calc(100% - 40px); margin: 20px; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+  .btn:hover { opacity: 0.9; transform: scale(0.98); }
+  .hint { font-size: 11px; color: #64748b; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header"><h2>لوحة الإدارة الذكية ⚙️</h2></div>
+  
+  <div class="section">
+    <label>📬 موعد التقرير اليومي</label>
+    <input type="time" id="reportTime">
+    <span class="hint">سيتم التنفيذ في الدقيقة المحددة تماماً</span>
+  </div>
+
+  <div class="section">
+    <label>⏱️ نافذة عمل النظام</label>
+    <div class="grid">
+      <input type="time" id="openTime" title="وقت الفتح">
+      <input type="time" id="closeTime" title="وقت الإغلاق">
+    </div>
+  </div>
+
+  <div class="section">
+    <label>🗑️ أتمتة حذف البيانات</label>
+    <input type="time" id="clearTime">
+    <div class="check-group">
+      <label class="check-item"><input type="checkbox" class="sheet-ch" value="بطاقة الدور (الردود)"> بطاقة الدور</label>
+      <label class="check-item"><input type="checkbox" class="sheet-ch" value="بطاقة التسميع (الردود)"> بطاقة التسميع</label>
+      <label class="check-item"><input type="checkbox" class="sheet-ch" value="بطاقة الإجازة (الردود)"> بطاقة الإجازة</label>
+    </div>
+  </div>
+
+  <button class="btn" onclick="save()">حفظ وتفعيل المهام</button>
+</div>
+
+<script>
+  function save() {
+    const btn = document.querySelector('.btn');
+    const data = {
+      reportTime: document.getElementById('reportTime').value,
+      openTime: document.getElementById('openTime').value,
+      closeTime: document.getElementById('closeTime').value,
+      clearTime: document.getElementById('clearTime').value,
+      sheetsToClear: Array.from(document.querySelectorAll('.sheet-ch:checked')).map(cb => cb.value)
+    };
+
+    if (!data.openTime || !data.closeTime) return alert("يرجى تحديد أوقات العمل");
+
+    btn.disabled = true; btn.innerText = "جاري الجدولة...";
+    google.script.run.withSuccessHandler(res => {
+      alert(res); btn.disabled = false; btn.innerText = "حفظ وتفعيل المهام";
+    }).saveAdminSettings(data);
+  }
+</script>
+</body>
+</html>
